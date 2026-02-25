@@ -15,7 +15,7 @@
 
 ### 3. API 密钥 ✓
 - ✅ Google API Key：已配置在 `.env` 文件中
-- ✅ Notion API：已配置（ntn_156549233796...）
+- ✅ Notion API：已配置（請查閱 .env 檔案）
 - ✅ 环境变量自动加载（python-dotenv）
 
 ## 🚀 启动应用
@@ -44,7 +44,7 @@ python mcp_server.py
 环境变量存储在 `.env` 文件中（已在 .gitignore 中）：
 
 ```env
-GOOGLE_API_KEY=AIzaSyDHkns7IBm80PslU91FFIo0pO2Dri7TzsI
+GOOGLE_API_KEY=your-google-api-key
 PLAYFORM_API=http://127.0.0.1:8000
 PLAYFORM_SECRET=your-secret-key
 ```

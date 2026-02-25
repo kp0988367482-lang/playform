@@ -1,11 +1,16 @@
-# Playform (scaffold)
+# Playform - GitHub + Antigravity AI Automation System
 
-This workspace contains a minimal scaffold for a Playform MVP:
+🤖 **자동화된 AI SaaS 생성 및 배포 시스템**
 
-- `backend/` - FastAPI app
-- `frontend/` - Vite + React frontend
+This workspace contains a complete AI automation system with:
+- `backend/` - FastAPI backend
+- `frontend/` - Vite + React frontend  
+- `agents/` - YouTube, SaaS, Marketing AI agents
+- `main_antigravity.py` - Master orchestrator for all agents
 
-Quick start
+---
+
+## 🚀 Quick Start (5분 안에 시작하기)
 
 Backend:
 

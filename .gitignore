@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Database
+*.db
+*.sqlite3
+
+# Logs
+*.log
+mcp_server.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend venv (루트 backend 폴더)
+backend/.venv/
+backend/__pycache__/
+
+# Playform 하위
+playform/node_modules/
+playform/.venv/
+playform/apps/*/node_modules/
+playform/apps/*/dist/
+playform/*.db
+playform/mcp_server.log
+
+# Snapshots
+.snapshots/

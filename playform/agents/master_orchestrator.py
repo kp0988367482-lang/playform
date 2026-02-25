@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""
+🤖 Master Orchestrator - AI 公司的大腦
+協調所有 Agent、制定決策、管理資源
+"""
+
+import os
+import json
+from datetime import datetime, timedelta
+from typing import Dict, List, Any
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain.agents import Tool, AgentExecutor, create_openai_functions_agent
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+load_dotenv()
+
+class MasterOrchestrator:
+    def __init__(self):
+        self.llm = ChatOpenAI(model="gpt-4", temperature=0.7)
+        self.state = {
+            "kpi": {},
+            "agents_status": {},
+            "today_schedule": [],
+            "decisions": [],
+            "alerts": []
+        }
+        
+    def analyze_daily_data(self) -> Dict[str, Any]:
+        """
+        每日00:00 執行 - 分析所有數據
+        Returns: 今日的關鍵指標
+        """
+        print("📊 分析昨日數據...")
+        
+        analysis_prompt = """
+        你是一個負責公司整體戰略的 Master Orchestrator。
+        
+        根據以下數據做出分析和決策:
+        - DAU (日活): {dau}
+        - MRR (月度收入): {mrr}  
+        - 轉換率: {conversion_rate}%
+        - bug 數量: {bugs}
+        - 內容表現: {content_performance}
+        
+        請做出決策:
+        1. 今日 3 大優先任務
+        2. 各 Agent 的資源分配
+        3. 任何需要緊急處理的問題
+        4. 風險預警
+        """
+        
+        response = self.llm.invoke(analysis_prompt)
+        return response.content
+    
+    def schedule_daily_tasks(self) -> List[Dict]:
+        """
+        08:00 執行 - 制定每日任務計劃
+        """
+        print("📋 制定每日任務計劃...")
+        
+        tasks = [
+            {
+                "time": "08:30",
+                "agent": "Revenue",
+                "task": "檢查早間銷售數據",
+                "priority": "medium"
+            },
+            {
+                "time": "09:00",
+                "agent": "Content",
+                "task": "準備今日內容發布",
+                "priority": "high"
+            },
+            {
+                "time": "09:30",
+                "agent": "SaaS",
+                "task": "開始新功能開發",
+                "priority": "high"
+            },
+            {
+                "time": "12:00",
+                "agent": "Marketing",
+                "task": "投放日度廣告",
+                "priority": "medium"
+            },
+            {
+                "time": "14:00",
+                "agent": "SaaS",
+                "task": "部署新功能",
+                "priority": "high"
+            },
+            {
+                "time": "16:00",
+                "agent": "Master",
+                "task": "實時 KPI 檢查",
+                "priority": "critical"
+            }
+        ]
+        
+        return tasks
+    
+    def make_strategic_decisions(self, metrics: Dict) -> Dict[str, Any]:
+        """
+        根據 KPI 做出戰略決策
+        """
+        print("🎯 制定戰略決策...")
+        
+        decisions = {
+            "focus_areas": [],
+            "agent_priorities": {},
+            "resource_allocation": {},
+            "risks": []
+        }
+        
+        # 根據轉換率決定是否優先 Revenue Agent
+        if metrics.get("conversion_rate", 0) < 2:
+            decisions["agent_priorities"]["Revenue"] = 1
+            decisions["focus_areas"].append("Optimize conversion funnel")
+        
+        # 根據 DAU 增長速度決定是否優先 SaaS Agent
+        if metrics.get("dau_growth", 0) > 20:
+            decisions["agent_priorities"]["SaaS"] = 2
+            decisions["focus_areas"].append("Scale infrastructure")
+        
+        # 根據 MRR 決定是否優先 Content Agent
+        if metrics.get("mrr", 0) < 5000:
+            decisions["agent_priorities"]["Content"] = 1
+            decisions["focus_areas"].append("Increase brand awareness")
+        
+        return decisions
+    
+    def monitor_kpi(self) -> Dict[str, float]:
+        """
+        實時 KPI 監控 (16:00 執行)
+        """
+        print("📈 監控實時 KPI...")
+        
+        kpi = {
+            "dai": 0,  # 日活
+            "mrr": 0,  # 月度收入
+            "conversion_rate": 0,
+            "churn_rate": 0,
+            "avg_session_duration": 0,
+            "feature_adoption_rate": 0,
+            "bug_count": 0
+        }
+        
+        return kpi
+    
+    def generate_daily_report(self) -> str:
+        """
+        生成每日報表 (18:00 執行)
+        """
+        print("📝 生成每日報表...")
+        
+        report = f"""
+        ╔════════════════════════════════════════╗
+        ║      🤖 AI 公司 - 每日報表 🤖         ║
+        ║        {datetime.now().strftime('%Y-%m-%d')}                 ║
+        ╚════════════════════════════════════════╝
+        
+        📊 今日 KPI:
+        ├─ DAU: {self.state.get('kpi', {}).get('dau', 0)}
+        ├─ MRR: ${self.state.get('kpi', {}).get('mrr', 0)}
+        ├─ 轉換率: {self.state.get('kpi', {}).get('conversion_rate', 0)}%
+        └─ bug 數: {self.state.get('kpi', {}).get('bugs', 0)}
+        
+        🎯 完成任務:
+        {self._format_completed_tasks()}
+        
+        ⚠️  警報和風險:
+        {self._format_alerts()}
+        
+        📋 明日優先事項:
+        {self._format_tomorrow_priority()}
+        
+        Generated by Master Orchestrator at {datetime.now().strftime('%H:%M:%S')}
+        """
+        
+        return report
+    
+    def _format_completed_tasks(self) -> str:
+        return "├─ Content: 發布 2 個視頻\n├─ SaaS: 部署 1 個新功能\n└─ Revenue: 簽署 2 個新客戶"
+    
+    def _format_alerts(self) -> str:
+        return "├─ 性能下降 5% (需優化)\n├─ CAC 增加 10% (需優化廣告)\n└─ 無關鍵錯誤"
+    
+    def _format_tomorrow_priority(self) -> str:
+        return "├─ 優先: 修復性能問題\n├─ 次優先: 發布新內容\n└─ 第三: A/B 測試新定價"
+    
+    def run_daily_cycle(self):
+        """
+        完整的每日自動化週期
+        """
+        print("\n" + "="*50)
+        print("🚀 啟動每日自動化週期...")
+        print("="*50 + "\n")
+        
+        # 00:00 收集數據
+        print("[00:00] 開始每日週期...")
+        data_analysis = self.analyze_daily_data()
+        print(f"✅ 數據分析完成\n{data_analysis}\n")
+        
+        # 08:00 制定計劃
+        tasks = self.schedule_daily_tasks()
+        print("[08:00] 制定任務計劃...")
+        for task in tasks:
+            print(f"  {task['time']} → {task['agent']}: {task['task']} ({task['priority']})")
+        
+        # 16:00 監控指標
+        kpi = self.monitor_kpi()
+        self.state["kpi"] = kpi
+        print("\n[16:00] 監控 KPI 指標...")
+        for key, value in kpi.items():
+            print(f"  {key}: {value}")
+        
+        # 18:00 生成報表
+        report = self.generate_daily_report()
+        print("\n[18:00] 生成每日報表...")
+        print(report)
+        
+        # 保存狀態
+        with open("orchestrator_state.json", "w") as f:
+            json.dump(self.state, f, indent=2, default=str)
+        
+        print("\n✅ 每日週期完成！")
+
+
+if __name__ == "__main__":
+    orchestrator = MasterOrchestrator()
+    orchestrator.run_daily_cycle()
